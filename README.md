@@ -95,7 +95,7 @@ npm i cookies-next
 ```
 
 ## Auth.js
-Utilizando cookies-next para Obtener, Configurar y Eliminar cookies con Nextjs
+Utilizando authjs para las Autenticaciones mediante algunos Proveedores como [google, github, ...etc]
 
 1. Instalamos de authjs
 ```
