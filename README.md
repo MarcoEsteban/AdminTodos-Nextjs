@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Development
+Pasos para levantar la app en desarrollo
 
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1. Levantar la base de datos
+* Primera forma
+```
+docker compose up -d
+```
+* Segunda forma
+```
+docker-compose up -d
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Crear una copia de el .env.template, y renombrarlo a .env
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Reemplazar las variables de entornos
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+4. Ejecutar el comando ``` npm install ```
 
-## Learn More
+5. Ejecutar el comando ``` npm run dev ```
 
-To learn more about Next.js, take a look at the following resources:
+6. Ejecutar estos comandos de Prisma en la ruta del proyecto
+``` 
+npx prisma migrate dev
+npx prisma generate
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+7. Ejecutar el SEED para [crear la base de datos local](localhost;3000/api/seed)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Nota: Usuario Por Defecto
+__usuario__  test1@google.com
+__password__ 123456
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Update Proyecto de Next 13 a Next 14
+Pasos para actualizar Next
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. Instalar el siguiente paquete ``` npm i - g npm-check-updates ``` instalamos de forma global y como administrador de Super Usuario.
+
+2. Ahora solo colocamos ``` ncu ``` en la Terminal  en el lugar donde se encuentra nuestro proyecto que queremos actualizar a la nueva version.
+
+3. Y Finalmente colocamos ``` ncu --upgrade ``` para actualizar nuestro proyecto.
+
+4. Tambien colocamos al ``` npm i ``` para reconstruir los jodulos
+<hr/>
+
+# Librerias o Paquetes Utilizados en el Proyecto del AdminTodos
+## Prisma commands
+Utilizando Prismas en Nextjs
+
+1. Inicializamos prisma en next
+```
+npx prisma init
+```
+
+2. Cada vez que realicemos un cambio en nuestra DB, vamos a realizar una 'migración' con el siguiente comando
+```
+npx prisma migrate dev
+```
+
+3. Ahora Generamos el Cliente de Prisma, para poder realizar manipulaciones con la Base de Datos.
+```
+npx prisma generate 
+```
+
+## Prisma CLI Reference
+Utilizando el comando ``` db pull ```, no permite que nos cree el modelo a partir de la tabla de la Base de datos
+```
+npx prisma db pull
+```
+* Lo conveniente es que cuando se crea el esquema 'schema', utilicemos el siguiente comando, para generar el cliente y poder trabajar con esa nueva tabla
+```
+npx prisma generate
+```
+
+* Ahora en caso de que realicemos un cambien en nuestro modelo de Prisma ejecutamos lo siguiente
+```
+npx prisma migrate dev
+```
+
+## Yup - Validation Schema
+Utilizando yup para validar los campos enviados por el body
+
+1. Instalamos de Yup
+```
+npm i yup
+```
+
+## Cookies-Next
+Utilizando cookies-next para Obtener, Configurar y Eliminar cookies con Nextjs
+
+1. Instalamos
+```
+npm i cookies-next
+```
+
+## Auth.js
+Utilizando cookies-next para Obtener, Configurar y Eliminar cookies con Nextjs
+
+1. Instalamos de authjs
+```
+npm i next-auth
+```
+
+2. Obtenemos el AUTH_SECRET
+```
+npx auth secret
+```
+
+## Adaptadores de Auth con Prisma - @auth/prisma-adapter
+Utilizando los adaptadores de Prisma para Auth en Next.js
+
+1. Instalamos los adapter
+```
+npm i @prisma/client @auth/prisma-adapter
+npm i prisma -save-dev
+```
+
+## bcryptjs - Encryptar password
+Utilizado para encriptar las contraseñas y no mandarlo como texto plano.
+
+1. Instalamos los paquetes
+```
+npm i bcryptjs -E
+npm i @types/bcryptjs -D
+```
+
+# Producción
+
+# Stage

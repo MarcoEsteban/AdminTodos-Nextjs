@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//TODO: Nota cada vez que creemos un nuevo Schema realizamos la 'migration && generate':  
+//? npx prisma migrate dev --name nombre_del_cambio  :: Indico que vamos a guardar los nuevos cambios y le damos un nombre al cambio que realicemos.
+//? npx prisma generate                              :: Indico que se sincronize la tabla 
+
+// ---------------------------------
+// Creamos el Schema para los Todos: 
+// ---------------------------------
+model Todo {
+  id          String   @id @default(uuid())
+  description String
+  complete    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Definimos como se va a relacionar la Tabla 'Todo' con la Tabla del 'User'
+  user   User   @relation(fields: [userId], references: [id])
+  userId String // Indico que se va a crear esta columno para hacer la relacion este Todo(userId) ---> User(id)
+}
+
+// -------------------------------------------------
+// Creamos el Schema para Authjs con Prisma Adapter:
+// -------------------------------------------------
+// user User @relation(fields: [userId], references: [id], onDelete: Cascade) => Permite Eliminar en Cascada.
+// @@unique([provider, providerAccountId]) => Si se elimina un usuario, se elimina la cuenta.
+model Account {
+  id                String  @id @default(uuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String?
+  // Solo lo vamos a utilizar para la autenticacion manual el password no para la autenticacion con {google, github, ...etc}
+  password      String?
+  roles         String[]  @default(["user"])
+  isActive      Boolean   @default(true)
+  email         String?   @unique
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+
+  // Aplicando la Relacion de Tablas:
+  accounts Account[] // Un User puede Tener Varias Account.
+  sessions Session[] // Un User puede Tener Varias Session.
+  todos    Todo[] // Un User puede Tener muchos Todos[]
+
+  // @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
+}
